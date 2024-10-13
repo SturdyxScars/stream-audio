@@ -66,8 +66,8 @@ playButton.addEventListener('click', () => {
 
       // Stream audio in smaller chunks
       let offset = 0;
-      const CHUNK_SIZE = 8000;  // Smaller chunk size for smoother streaming
-      const INTERVAL = 10;      // Adjusted interval to avoid overloading
+      const CHUNK_SIZE = 4000;  // Smaller chunk size for smoother streaming
+      const INTERVAL = 50;      // Adjusted interval to avoid overloading
 
       function sendChunk() {
         if (offset < audioData.byteLength) {
