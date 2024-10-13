@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audio Streaming</title>
+</head>
+<body>
+  <h1>Audio Streaming</h1>
+
+  <div id="role-selection">
+    <button id="senderBtn">Sender</button>
+    <button id="receiverBtn">Receiver</button>
+  </div>
+
+  <div id="sender-controls" style="display:none;">
+    <input type="file" id="audioFile" accept="audio/*">
+    <button id="playBtn">Play</button>
+    <button id="stopBtn">Stop</button>
+    <audio id="audioPlayer" controls></audio>
+  </div>
+
+  <div id="receiver-controls" style="display:none;">
+    <h2>Waiting for audio stream...</h2>
+    <audio id="receiverPlayer" controls></audio>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
