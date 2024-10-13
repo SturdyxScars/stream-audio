@@ -128,7 +128,8 @@ let isPlaying = false;  // Flag to track if chunk was played completely
 // Start playback only when enough audio is buffered
 function startPlaybackWhenBuffered() {
   const MIN_BUFFER_TIME = 1.5;  // Duration of each buffered chunk in seconds
-  
+
+  let playbackStartTime = 0;
   const checkBufferAndPlay = setInterval(() => {
     if (receiverPlayer.buffered.length > 0) {
       const bufferedEnd = receiverPlayer.buffered.end(0);  // Get the buffered end time
