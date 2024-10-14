@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Audio Streaming</title>
+
+  <!-- Inline CSS for transitions and custom audio player UI -->
   <style>
     /* General Page Styling */
     body {
@@ -44,7 +46,7 @@
       transform: scale(1.05);
     }
 
-    /* Animation for showing sections */
+    /* Hidden sections for sender and receiver */
     #sender-controls, #receiver-controls {
       padding: 20px;
       background-color: rgba(255, 255, 255, 0.1);
@@ -52,82 +54,64 @@
       width: 80%;
       margin: 30px auto;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      display: none; /* Keep hidden initially */
     }
 
-    /* Audio Player Container */
-    .audio-card .audio-header {
+    /* Visible sections with animation */
+    .active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    /* Custom Audio Player Styling */
+    .audio-card {
+      background-color: #222;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      margin-top: 30px;
+      width: 100%;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .audio-card .controls {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
       align-items: center;
-    }
-
-    .audio-card .circles {
-      display: flex;
-    }
-
-    .audio-card .circle {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background-color: #F86D7D;
-      margin-right: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .circle:nth-child(2) {
-      background-color: #FFD166;
-    }
-
-    .circle:nth-child(3) {
-      background-color: #4CAF50;
-    }
-
-    /* EQ bars for the bottom */
-    .audio-card .audio-eq {
-      display: flex;
-      justify-content: space-between;
       margin-top: 20px;
     }
 
-    .audio-card .audio-eq .bar {
-      width: 20px;
-      height: 50px;
-      background-color: #4A90E2;
-      border-radius: 5px;
-      animation: equalizer 1s infinite ease-in-out;
+    .audio-card button {
+      background-color: #FF5722;
+      border: none;
+      color: white;
+      border-radius: 50%;
+      padding: 15px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
-    .audio-card .audio-eq .bar:nth-child(2) {
-      height: 35px;
-      animation-delay: 0.1s;
+    .audio-card button:hover {
+      background-color: #E64A19;
     }
 
-    .audio-card .audio-eq .bar:nth-child(3) {
-      height: 40px;
-      animation-delay: 0.2s;
+    .audio-card audio {
+      margin-top: 15px;
+      width: 100%;
     }
 
-    .audio-card .audio-eq .bar:nth-child(4) {
-      height: 30px;
-      animation-delay: 0.3s;
-    }
-
-    .audio-card .audio-eq .bar:nth-child(5) {
-      height: 45px;
-      animation-delay: 0.4s;
-    }
-
-    /* Equalizer animation */
-    @keyframes equalizer {
-      0% {
-        transform: scaleY(1);
-      }
-      50% {
-        transform: scaleY(0.5);
-      }
-      100% {
-        transform: scaleY(1);
-      }
+    /* Background Image for Sections */
+    #role-selection {
+      background: url('https://png.pngtree.com/thumb_back/fw800/background/20230722/pngtree-streaming-music-headphones-atop-a-white-cloud-storage-background-in-3d-image_3765477.jpg') no-repeat center;
+      background-size: cover;
+      padding: 100px 0;
+      border-radius: 20px;
     }
 
     /* Responsive Design */
@@ -143,15 +127,6 @@
 
       .audio-card {
         width: 90%;
-        margin: 0 auto;
-      }
-
-      .audio-header {
-        flex-direction: column;
-      }
-      
-      .audio-icon {
-        margin-top: 10px;
       }
     }
   </style>
@@ -164,14 +139,19 @@
     <button id="receiverBtn">Receiver</button>
   </div>
 
-  <div id="sender-controls" style="display:none;">
+  <!-- Sender Controls with Custom Audio Player UI -->
+  <div id="sender-controls" class="audio-card">
+    <h2>Upload and Stream Audio</h2>
     <input type="file" id="audioFile" accept="audio/*">
-    <button id="playBtn">Play</button>
-    <button id="stopBtn">Stop</button>
+    <div class="controls">
+      <button id="playBtn">▶</button>
+      <button id="stopBtn">⏹</button>
+    </div>
     <audio id="audioPlayer" controls></audio>
   </div>
 
-  <div id="receiver-controls" style="display:none;">
+  <!-- Receiver Controls Section -->
+  <div id="receiver-controls" class="audio-card">
     <h2>Waiting for audio stream...</h2>
     <audio id="receiverPlayer" controls></audio>
   </div>
