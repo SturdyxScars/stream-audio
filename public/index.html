@@ -4,6 +4,157 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Audio Streaming</title>
+  <style>
+    /* General Page Styling */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #141E30, #243B55);
+      color: #fff;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      margin-top: 50px;
+      font-size: 3rem;
+      color: #f0f0f0;
+      text-shadow: 2px 2px 4px #000000;
+    }
+
+    #role-selection {
+      margin: 50px 0;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      margin: 20px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      background: #FF5722;
+      color: white;
+      transition: background 0.3s ease-in-out, transform 0.3s ease;
+    }
+
+    button:hover {
+      background: #E64A19;
+      transform: scale(1.05);
+    }
+
+    /* Animation for showing sections */
+    #sender-controls, #receiver-controls {
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      width: 80%;
+      margin: 30px auto;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Audio Player Container */
+    .audio-card .audio-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .audio-card .circles {
+      display: flex;
+    }
+
+    .audio-card .circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #F86D7D;
+      margin-right: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .circle:nth-child(2) {
+      background-color: #FFD166;
+    }
+
+    .circle:nth-child(3) {
+      background-color: #4CAF50;
+    }
+
+    /* EQ bars for the bottom */
+    .audio-card .audio-eq {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .audio-card .audio-eq .bar {
+      width: 20px;
+      height: 50px;
+      background-color: #4A90E2;
+      border-radius: 5px;
+      animation: equalizer 1s infinite ease-in-out;
+    }
+
+    .audio-card .audio-eq .bar:nth-child(2) {
+      height: 35px;
+      animation-delay: 0.1s;
+    }
+
+    .audio-card .audio-eq .bar:nth-child(3) {
+      height: 40px;
+      animation-delay: 0.2s;
+    }
+
+    .audio-card .audio-eq .bar:nth-child(4) {
+      height: 30px;
+      animation-delay: 0.3s;
+    }
+
+    .audio-card .audio-eq .bar:nth-child(5) {
+      height: 45px;
+      animation-delay: 0.4s;
+    }
+
+    /* Equalizer animation */
+    @keyframes equalizer {
+      0% {
+        transform: scaleY(1);
+      }
+      50% {
+        transform: scaleY(0.5);
+      }
+      100% {
+        transform: scaleY(1);
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      button {
+        font-size: 1rem;
+        padding: 10px 20px;
+      }
+
+      .audio-card {
+        width: 90%;
+        margin: 0 auto;
+      }
+
+      .audio-header {
+        flex-direction: column;
+      }
+      
+      .audio-icon {
+        margin-top: 10px;
+      }
+    }
+  </style>
 </head>
 <body>
   <h1>Audio Streaming</h1>
