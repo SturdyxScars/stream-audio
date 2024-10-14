@@ -13,7 +13,7 @@ const receiverPlayer = document.getElementById('receiverPlayer');
 
 let audioFile;
 let isSender = false;
-let audioDataChunks = []; // To store received audio chunks
+let audioChunkQueue = []; // To store received audio chunks
 let mediaSource;
 let sourceBuffer;
 
@@ -66,8 +66,8 @@ playButton.addEventListener('click', () => {
 
       // Stream audio in smaller chunks
       let offset = 0;
-      const CHUNK_SIZE = 4000;  // Smaller chunk size for smoother streaming
-      const INTERVAL = 50;      // Adjusted interval to avoid overloading
+      const CHUNK_SIZE = 8000;  // Smaller chunk size for smoother streaming
+      const INTERVAL = 80;      // Adjusted interval to avoid overloading
 
       function sendChunk() {
         if (offset < audioData.byteLength) {
@@ -105,6 +105,9 @@ stopButton.addEventListener('click', () => {
 });
 
 // Handle incoming audio stream on the receiver side
+let receivedChunks = 0;
+let bufferedBytes = 0;
+const CHUNK_SIZE = 8000
 socket.on('audio-stream', (data) => {
   const chunk = new Uint8Array(data.data);
   console.log('source buffer', sourceBuffer);
@@ -113,6 +116,8 @@ socket.on('audio-stream', (data) => {
     try {
       sourceBuffer.appendBuffer(chunk);  // Append chunk to source buffer
       console.log('Received and appended chunk');
+      receivedChunks++;
+      bufferedBytes += chunk.byteLength;
     } catch (error) {
       console.error('Error appending chunk:', error);
       // Handle buffer overflow by waiting and retrying
@@ -126,31 +131,39 @@ socket.on('audio-stream', (data) => {
 });
 let isPlaying = false;  // Flag to track if chunk was played completely
 // Start playback only when enough audio is buffered
+
+const CHUNKS_BEFORE_PLAY = 2;
 function startPlaybackWhenBuffered() {
   const MIN_BUFFER_TIME = 1.5;  // Duration of each buffered chunk in seconds
 
   let playbackStartTime = 0;
+  let playFinished = 0;
   const checkBufferAndPlay = setInterval(() => {
     if (receiverPlayer.buffered.length > 0) {
       const bufferedEnd = receiverPlayer.buffered.end(0);  // Get the buffered end time
-      if (!isPlaying && bufferedEnd >= MIN_BUFFER_TIME) {
+      playFinished = bufferedEnd;
+      if (!isPlaying && bufferedBytes >= CHUNK_SIZE && receivedChunks >= CHUNKS_BEFORE_PLAY) {
+
         console.log('Starting playback of new chunk.');
         receiverPlayer.play();  // Start playback
         playbackStartTime = receiverPlayer.currentTime;  // Track the current time
+        receivedChunks = 0;
+        bufferedBytes = 0;
 
-        isPlaying = true;  // Set flag to true since playback started
+        isPlaying = true;  //Set flag to true since playback started
       }  
-      // Check if the chunk is fully played
+      //Check if the chunk is fully played
       const playedTime = receiverPlayer.currentTime - playbackStartTime;
-      if (isPlaying && playedTime >= MIN_BUFFER_TIME+0.5) {
+      if (isPlaying && playedTime === bufferedEnd && playFinished === 0) {
         console.log('Chunk played completely.');
-        isPlaying = false;  // Reset flag to play the next chunk  
+        isPlaying = false;  // Reset flag to play the next chunk
         // Clear the interval when done, or load/play the next chunk if available
         if (bufferedEnd < MIN_BUFFER_TIME) {
           console.log('No more buffered chunks, waiting for the next one.');
           clearInterval(checkBufferAndPlay);  // Stop checking
         }
       }
+      playFinished--;
     }
   }, 100);  // Check every 100ms
 }
